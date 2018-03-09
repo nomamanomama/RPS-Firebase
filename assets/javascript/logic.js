@@ -9,14 +9,27 @@ var config = {
   };
   firebase.initializeApp(config);
 
-//   var starCountRef = firebase.database().ref('posts/' + postId + '/starCount');
-//   starCountRef.on('value', function(snapshot) {
-//     updateStarCount(postElement, snapshot.val());
-//   });
+  //function to display Player input field
 
-// var userId = firebase.auth().currentUser.uid;
-// return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
-//   var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-//   // ...
-// });
-// firebase.database().ref().update(updates);
+  //on submit name, display welcome message and Player number 
+
+  //create playerDisplay() function for Playerbox content
+  //for current player
+  //create 3 buttons for: Rock, Paper and Scissors
+  //append the buttons to current player box
+
+  //call playerDisplay for Player1
+  //call playerDisplay for Player2
+
+  //handler function for Rock, Paper, Scissor button
+  //player1 select first
+  //set player2 active after player 1 selects
+  //player2 select
+  //on player2 selection, compare player choices
+  //display results in resultbox
+  //increment win/loss count for player1
+  //increment win/loss count for player2
+
+  //handle chatEnter
+
+  
