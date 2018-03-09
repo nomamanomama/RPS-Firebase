@@ -8,3 +8,15 @@ var config = {
     messagingSenderId: "882906915418"
   };
   firebase.initializeApp(config);
+
+//   var starCountRef = firebase.database().ref('posts/' + postId + '/starCount');
+//   starCountRef.on('value', function(snapshot) {
+//     updateStarCount(postElement, snapshot.val());
+//   });
+
+// var userId = firebase.auth().currentUser.uid;
+// return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
+//   var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+//   // ...
+// });
+// firebase.database().ref().update(updates);
