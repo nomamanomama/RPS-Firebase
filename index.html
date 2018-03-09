@@ -12,14 +12,56 @@
     <!-- link our stylesheet -->
     <link rel="stylesheet" href="./assets/css/style.css">
 
-    <title>RPS Multi-player</title>
+    <title>RPS Multiplayer</title>
 </head>
 <body>
-    
+    <div class="jumbotron text-center"><h1>Rock Paper Scissors</h1></div>
+    <div class="container">
+        <div class="row justify-content-center" id="player">
+            <input type="text" id="newplayerEntry" placeholder="Name"></input>
+            <button type="button" class="btn btn-secondary newPlayerButton" id="chatSend">Start</button>
+            <div class="row text-center" id="playerMessage"></div>
+        </div>
+        <div class="row justify-content-center" id="gameMessage">Enter your name to play.</div>
+        <div class="row" id="gameboard">
+            <div class="col-4 card playerBox" id="player1">
+                <div class="card-header">
+                    Player 1
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">Select one</p>
+                    <button type="button" class="rpsButton" id="rock1"><img src="#" alt="rock"></button>
+                    <button type="button" class="rpsButton" id="paper1"><img src="#" alt="paper"></button>
+                    <button type="button" class="rpsButton" id="scissors1"><img src="#" alt="scissors"></button>
+                </div>
+            </div>
+            <div class="col-4 card resultBox" id="result">Result</div>
+            <div class="col-4 card playerBox" id="player2">
+                <div class="card-header">
+                    Player 2
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">Select one</p>
+                    <button class="rpsButton" id="rock2"><img src="#" alt="rock"></button>
+                    <button class="rpsButton" id="paper2"><img src="#" alt="paper"></button>
+                    <button class="rpsButton" id="scissors2"><img src="#" alt="scissors"></button>
+                </div>
+            </div>
+        </div>
+        <div class="chatBox">
+            <div class="row justify-content-center chatHistory"></div>
+            <div class="row justify-content-center chatBox">
+                <input type="text" id="chatEntry"></input>
+                <button type="button" class="btn btn-secondary chatButton" id="chatSend">Send</button>
+            </div>
+        </div>
+    </div>
     <!-- Add Firebase -->
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
     <!-- Add JQuery -->
-    <script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
     <!-- Add Bootstrap -->
