@@ -17,11 +17,11 @@
 <body>
     <div class="jumbotron text-center"><h1>Rock Paper Scissors</h1></div>
     <div class="container">
-        <div class="row justify-content-center" id="player">
-            <input type="text" id="newplayerEntry" placeholder="Name"></input>
-            <button type="button" class="btn btn-secondary newPlayerButton" id="chatSend">Start</button>
-            <div class="row text-center" id="playerMessage"></div>
-        </div>
+        <div class="row justify-content-center" id="newPlayerBox">
+            <input type="text" id="newPlayerName" placeholder="Name"></input>
+            <button type="button" class="btn btn-secondary newPlayerButton" id="newPlayer">Start</button>
+        </div>            
+        <div class="row text-center" id="playerMessage"></div>
         <div class="row justify-content-center" id="gameMessage">Enter your name to play.</div>
         <div class="row" id="gameboard">
             <div class="col-4 card playerBox" id="player1">
@@ -29,24 +29,34 @@
                     Player 1
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title"></h5>
-                    <p class="card-text">Select one</p>
-                    <button type="button" class="rpsButton" id="rock1"><img src="#" alt="rock"></button>
-                    <button type="button" class="rpsButton" id="paper1"><img src="#" alt="paper"></button>
-                    <button type="button" class="rpsButton" id="scissors1"><img src="#" alt="scissors"></button>
+                    <h5 class="card-title" id="player1-name"></h5>
+                    <div id="player1-buttons">
+                        <p class="card-text">Select one</p>
+                        <button type="button" class="rpsButton" value = "rock" id="rock1"><img src="#" alt="rock"></button>
+                        <button type="button" class="rpsButton" value = "paper" id="paper1"><img src="#" alt="paper"></button>
+                        <button type="button" class="rpsButton" value = "scissors" id="scissors1"><img src="#" alt="scissors"></button>
+                    </div>
                 </div>
+                <div class = "card-text stats">Wins: <span id="wins"></span> Losses:
+                <span id="losses"></span></div>
             </div>
-            <div class="col-4 card resultBox" id="result">Result</div>
+            <div class="col-4 card resultBox" id="result">Result </div>
             <div class="col-4 card playerBox" id="player2">
                 <div class="card-header">
                     Player 2
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title"></h5>
-                    <p class="card-text">Select one</p>
-                    <button class="rpsButton" id="rock2"><img src="#" alt="rock"></button>
-                    <button class="rpsButton" id="paper2"><img src="#" alt="paper"></button>
-                    <button class="rpsButton" id="scissors2"><img src="#" alt="scissors"></button>
+                    <h5 class="card-title" id="player2-name"></h5>
+                    <div id="player2-buttons">
+                        <p class="card-text">Select one</p>
+                        <button type="button" class="rpsButton" id="rock2" value = "rock"><img src="#" alt="rock"></button>
+                        <button type="button" class="rpsButton" id="paper2" value = "paper"><img src="#" alt="paper"></button>
+                        <button type="button" class="rpsButton" id="scissors2" value = "scissors"><img src="#" alt="scissors"></button>
+                    </div>
+                </div>
+                <div class="card-text stats">Wins:
+                    <span id="wins"></span> Losses:
+                    <span id="losses"></span>
                 </div>
             </div>
         </div>
