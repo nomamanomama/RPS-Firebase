@@ -16,7 +16,7 @@ var db = firebase.database();
 // All players will be stored in this directory.
 var playersRef = db.ref("/players");
 var chatRef = db.ref("/chat");
-var connectionsRef = db.ref("/connections");
+
 // '.info/connected' is a special location provided by Firebase that is updated
 // every time the client's connection state changes.
 // '.info/connected' is a boolean value, true if the client is connected and false if they are not.
@@ -24,16 +24,9 @@ var connectedRef = db.ref(".info/connected");
 
 // When the client's connection state changes...
 connectedRef.on("value", function (snapshot) {
-
   // If they are connected..
   if (snapshot.val()) {
-    console.log ("connected status: " + snapshot.val());
-    // Add user to the connections list.
-    var con = connectionsRef.push(true);
-
-    // Remove user from the connection list when they disconnect.
-    con.onDisconnect().remove();
-      
+    console.log ("connected status: " + snapshot.val());    
   }
   
 });
@@ -51,6 +44,7 @@ playersRef.on("value", function (snapshot) {
       gameInSession = true;
       updateLocalPlayer(1, snapshot.child('1').val());
       updateLocalPlayer(2, snapshot.child('2').val());
+      updatePlayerDisplay();
     } 
     else{
       gameInSession = false;
@@ -82,6 +76,20 @@ var players = [p1, p2];
 var myPlayerIndex;
 var turn = 0;
 var gameInSession = false;
+var winningChoice = "";
+
+var rockWins = {
+  name: "rock",
+  image: "./assets/images/win-rock.jpg"
+}
+var paperWins = {
+  name: "paper",
+  image: "./assets/images/win-paper.jpg"
+}
+var scissorsWins = {
+  name: "scissors",
+  image: "./assets/images/win-scissors.jpg"
+}
 
 function updateLocalPlayer(index, player) {
   players[index - 1].wins = player.wins;
@@ -111,20 +119,31 @@ function endRound() {
 //create playerDisplay() function for Playerbox content
 function setCurrentPlayerDisplay(index) {
 
+  $("#player1").removeClass("active");
+  $("#player2").removeClass("active");
   if (myPlayerIndex === index) {
-    //set current player name
-    $("#player" + index + "-name").show();
     //show 3 buttons for: Rock, Paper and Scissors
     $("#player" + index + "-buttons").show();
   }
   else {
-    $("#player" + myPlayerIndex).removeClass("active");
     //hide 3 buttons for: Rock, Paper and Scissors
     $("#player" + myPlayerIndex + "-buttons").hide();
   }
 
   $("#player" + index).addClass("active");
-  displayResult("May the best player win.");
+  displayResult("Play on!");
+
+}
+
+function updatePlayerDisplay() {
+    //set current player name
+    $("#player1-name").text(players[0].name);
+    $("#wins1").text(players[0].wins);
+    $("#losses1").text(players[0].losses);
+
+    $("#player2-name").text(players[1].name);
+    $("#wins2").text(players[1].wins);
+    $("#losses2").text(players[1].losses);
 
 }
 
@@ -144,36 +163,44 @@ function calculateResult() {
       //check for tie game
       if (player1.choice === player2.choice) {
         message = "Tie!"
+        winningChoice = "Tie";
+        winnerIndex=0;
       }
       //test for player 1 wins  
       else if (player1.choice === "rock" && player2.choice === "scissors") {
         winnerIndex = 1;
-        message = player1.name + " Wins! Rock beats Scissors!";
+        winningChoice = "Rock";
+        message = "Rock beats Scissors!";
       }
       else if (player1.choice === "scissors" && player2.choice === "paper") {
         winnerIndex = 1;
-        message = player1.name + " Wins! Scissors cut Paper!";
+        winningChoice = "Scissors";
+        message = "Scissors cut Paper!";
       }
       else if (player1.choice === "paper" && player2.choice === "rock") {
         winnerIndex = 1;
-        message = player1.name + " Wins! Paper covers Rock!";
+        winningChoice = "Paper";
+        message = "Paper covers Rock!";
       }
       //test for player 2 wins
       else if (player1.choice === "paper" && player2.choice === "scissors") {
         winnerIndex = 2;
-        message = player2.name + " Wins! Scissors cut Paper!";
+        winningChoice = "Scissors";
+        message = "Scissors cut Paper!";
       }
       else if (player1.choice === "scissors" && player2.choice === "rock") {
         winnerIndex = 2;
-        message = player2.name + " Wins! Rock beats Scissors!";
+        winningChoice = "Rock";
+        message = "Rock beats Scissors!";
       }
       else if (player1.choice === "rock" && player2.choice === "paper") {
         winnerIndex = 2;
-        message = player2.name + " Wins! Paper covers Rock!";
+        winningChoice = "Paper";
+        message = "Paper covers Rock!";
       }
 
       updatePlayerRecord(winnerIndex);
-      displayResult(message);
+      displayResult(message, winnerIndex);
 
     });
 }
@@ -189,17 +216,35 @@ function updatePlayerRecord(winner) {
   }
 
   playersRef.update({ 1: p1, 2: p2 });
-
 }
 
-function displayResult(message) {
+function displayResult(message, index=0) {
+  if(index === 1 || index === 2)
+    $("#resultTitle").text(players[index-1].name + " Won!");
+  else
+    $("#resultTitle").text("");
+
   $("#result").text(message);
+  var srcPic = "./assets/images/rockpaperscissors.jpg";
+  switch(winningChoice){
+    case "Rock": srcPic = rockWins.image; break;
+    case "Paper": srcPic = paperWins.image; break;
+    case "Scissors": srcPic = scissorsWins.image; break;
+    default: break;
+  }
+  $("#resultPic").attr("src", srcPic);
+  $("#resultPic").show();
 }
 
 $(document).ready(function () {
-
+  $("#newPlayerName").focus();
+  $("#newPlayerName").select();
   $("#player1-buttons").hide();
   $("#player2-buttons").hide();
+  $("#resultPic").hide();
+  scrollTo(0, $("#chatHistory").scrollHeight);
+  //initiate bootstrap tooltips
+  $('[data-toggle="tooltip"]').tooltip();
 
   //function to display Player input field or playermessage
   function displayNewPlayerBox(show, message) {
@@ -215,7 +260,8 @@ $(document).ready(function () {
   }
 
   //on $(#newPlayer) click, assign Player number and display welcome message
-  $("#newPlayer").on("click", function () {
+  $("#newPlayer").on("click", function (e) {
+    e.preventDefault();
     var playerName = $("#newPlayerName").val().trim();
 
     var player1Ref = db.ref('/players/1');
@@ -260,7 +306,10 @@ $(document).ready(function () {
           //Welcome user
           var displayMessage = "Welcome to the game " + playerName + "! You're Player " + myPlayerIndex;
           
-          displayNewPlayerBox(false, displayMessage);
+          //enable the chat button
+          $("#chatSend").attr("disabled", false);
+          $("#chatSend").attr("aria-disabled", false);  
+
           //get another snapshot of db to get player count
           playersRef.once("value")
             .then(function (snapshot) {
@@ -295,7 +344,7 @@ $(document).ready(function () {
       turn = snapshot.val().turn;
       if (turn === 0) { //display results
         calculateResult();
-        setTimeout(startNewRound, 1000);
+        setTimeout(startNewRound, 2000);
       } 
       else {
         //changed turns
@@ -317,20 +366,28 @@ $(document).ready(function () {
   });
 
   
+$("#chatSend").on("click", function (e) {
+  e.preventDefault();
+  if (myPlayerIndex === undefined){
+    displayResult("Log in to play and chat");
+    return;
+  }  
 
+  var chatEntry = $("#chatEntry").val().trim();
+  var chat = chatRef.push({
+    message: chatEntry, 
+    sender: players[myPlayerIndex-1].name}
+  );
+  $("#chatEntry").empty();
+});
 
-
-
-  //handler function for Rock, Paper, Scissor button
-  //player1 select first
-  //set player2 active after player 1 selects
-  //player2 select
-  //on player2 selection, compare player choices
-  //display results in resultbox
-  //increment win/loss count for player1
-  //increment win/loss count for player2
-
-  //handle chatEnter
+chatRef.on("child_added", function (snapshot){
+  //get the sender and message and append to screen
+    chat = snapshot.val();
+    var chatDiv = $("<div>").html(chat.sender + ": " + chat.message);
+    console.log(chatDiv);
+    $("#chatHistory").append(chatDiv);
+  });
 
 
 });

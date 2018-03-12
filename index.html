@@ -18,13 +18,23 @@
     <div class="jumbotron text-center"><h1>Rock Paper Scissors</h1></div>
     <div class="container">
         <div class="row justify-content-center" id="newPlayerBox">
-            <input type="text" id="newPlayerName" placeholder="Name"></input>
-            <button type="button" class="btn btn-secondary newPlayerButton" id="newPlayer">Start</button>
+            <form>
+                <div class="input-group mb-3 chatBox">
+                    <input id="newPlayerName" type="text" class="form-control" placeholder="Player Name" aria-label="New Player Name" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary newPlayerButton" id="newPlayer" type="submit">Play</button>
+                    </div>
+                </div>
+            </form>
+            <!-- <form> -->
+                <!-- <input type="text" id="newPlayerName" placeholder="Name"></input>
+                <button type="submit" class="btn btn-secondary newPlayerButton" id="newPlayer">Start</button>
+            </form> -->
             <div class="col-12 justify-content-center" id="gameMessage">Enter your name to play.</div>
         </div>            
-        <div class="row text-center" id="playerMessage"></div>
+        <div class="row justify-content-center" id="playerMessage"></div>
         
-        <div class="row" id="gameboard">
+        <div class="row justify-content-center" id="gameboard">
             <div class="col-4 card playerBox" id="player1">
                 <div class="card-header">
                     Player 1
@@ -32,16 +42,21 @@
                 <div class="card-body">
                     <h5 class="card-title" id="player1-name"></h5>
                     <div id="player1-buttons">
-                        <p class="card-text">Select one</p>
-                        <button type="button" class="rpsButton" value = "rock" id="rock1"><img src="#" alt="rock"></button>
-                        <button type="button" class="rpsButton" value = "paper" id="paper1"><img src="#" alt="paper"></button>
-                        <button type="button" class="rpsButton" value = "scissors" id="scissors1"><img src="#" alt="scissors"></button>
+                        <p class="card-text">Choose your weapon</p>
+                        <button type="button" class="btn rpsButton" value = "rock" id="rock1" data-toggle="tooltip" data-placement="top" title="Rock"><img src="./assets/images/rock.jpg" class="rpsImage" alt="rock"></button>
+                        <button type="button" class="btn rpsButton" value = "paper" id="paper1" data-toggle="tooltip" data-placement="top" title="Paper"><img src="./assets/images/paper.jpg" class="rpsImage" alt="paper"></button>
+                        <button type="button" class="btn rpsButton" value = "scissors" id="scissors1" data-toggle="tooltip" data-placement="top" title="Scissors"><img src="./assets/images/scissors.jpg" class="rpsImage" alt="scissors"></button>
                     </div>
+                    <div id="player1-choice"></div>
                 </div>
-                <div class = "card-text stats">Wins: <span id="wins"></span> Losses:
-                <span id="losses"></span></div>
+                <div class = "card-text stats">Wins: <span id="wins1"></span> Losses:
+                <span id="losses1"></span></div>
             </div>
-            <div class="col-4 card resultBox" id="result"> </div>
+            <div class="col-4 card resultBox"> 
+                <div id="resultTitle"></div>
+                <div id="result"></div>
+                <div><img id="resultPic" src="./assets/images/rockpaperscissors.jpg" alt="win-pic"></div>
+            </div>
             <div class="col-4 card playerBox" id="player2">
                 <div class="card-header">
                     Player 2
@@ -49,23 +64,32 @@
                 <div class="card-body">
                     <h5 class="card-title" id="player2-name"></h5>
                     <div id="player2-buttons">
-                        <p class="card-text">Select one</p>
-                        <button type="button" class="rpsButton" id="rock2" value = "rock"><img src="#" alt="rock"></button>
-                        <button type="button" class="rpsButton" id="paper2" value = "paper"><img src="#" alt="paper"></button>
-                        <button type="button" class="rpsButton" id="scissors2" value = "scissors"><img src="#" alt="scissors"></button>
+                        <p class="card-text">Choose your weapon</p>
+                        <button type="button" class="btn rpsButton" id="rock2" value = "rock" data-toggle="tooltip" data-placement="top" title="Rock"><img src="./assets/images/rock.jpg" class="rpsImage" alt="rock"></button>
+                        <button type="button" class="btn rpsButton" id="paper2" value = "paper" data-toggle="tooltip" data-placement="top" title="Paper"><img src="./assets/images/paper.jpg" class="rpsImage" alt="paper"></button>
+                        <button type="button" class="btn rpsButton" id="scissors2" value = "scissors" data-toggle="tooltip" data-placement="top" title="Scissors"><img src="./assets/images/scissors.jpg" class="rpsImage" alt="scissors"></button>
                     </div>
+                    <div id="player2-choice"></div>
                 </div>
                 <div class="card-text stats">Wins:
-                    <span id="wins"></span> Losses:
-                    <span id="losses"></span>
+                    <span id="wins2"></span> Losses:
+                    <span id="losses2"></span>
                 </div>
             </div>
         </div>
-        <div class="chatBox">
-            <div class="row justify-content-center chatHistory"></div>
-            <div class="row justify-content-center chatBox">
-                <input type="text" id="chatEntry"></input>
-                <button type="button" class="btn btn-secondary chatButton" id="chatSend">Send</button>
+        <div class="row justify-content-center">
+            <div class="col-12 card chatBox">
+                <div class="card-title" id="chatTitle">
+                    <h5>Chat History</h5>
+                </div>
+                <div class="card-body" id="chatHistory">
+                </div>
+            </div>
+            <div class="input-group mb-3 chatBox">
+                <input id="chatEntry" type="text" class="form-control" placeholder="Chat Message" aria-label="Chat Message" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary chatButton" id="chatSend" type="button" aria-disabled="true" disabled >Send</button>
+                </div>
             </div>
         </div>
     </div>
