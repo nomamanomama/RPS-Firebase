@@ -44,16 +44,26 @@ playersRef.on("value", function (snapshot) {
       gameInSession = true;
       updateLocalPlayer(1, snapshot.child('1').val());
       updateLocalPlayer(2, snapshot.child('2').val());
-      updatePlayerDisplay();
+      updatePlayerDisplay(1);
+      updatePlayerDisplay(2);
     } 
-    else{
+    else {
+      if(player1connected){
+        updateLocalPlayer(1, snapshot.child('1').val());
+        updatePlayerDisplay(1);
+      } 
+      else if(player2connected){
+        updateLocalPlayer(2, snapshot.child('2').val());
+        updatePlayerDisplay(2);
+      }
       gameInSession = false;
       endRound();
       setCurrentPlayerDisplay(0);
-      displayResult("");    
+      displayResult("Waiting...");    
     }
   }
 });
+
 
 // -------------------------------------------------------------- (CRITICAL - BLOCK) 
 
@@ -135,16 +145,13 @@ function setCurrentPlayerDisplay(index) {
 
 }
 
-function updatePlayerDisplay() {
+function updatePlayerDisplay(index) {
     //set current player name
-    $("#player1-name").text(players[0].name);
-    $("#wins1").text(players[0].wins);
-    $("#losses1").text(players[0].losses);
-
-    $("#player2-name").text(players[1].name);
-    $("#wins2").text(players[1].wins);
-    $("#losses2").text(players[1].losses);
-
+    if(index === 1 || index === 2){
+      $("#player" + index +"-name").text(players[index -1].name);
+      $("#wins" + index).text(players[index - 1].wins);
+      $("#losses" + index).text(players[index - 1].losses);
+    }
 }
 
 function isMyTurn() {
@@ -353,7 +360,7 @@ $(document).ready(function () {
     }
   });
 
-   //on $(#newPlayer) click, assign Player number and display welcome message
+   //on $(#rpsButton) click, update db with choice and handle turn state
   $(".rpsButton").on("click", function () {
     db.ref('players/' + myPlayerIndex).update({
       choice: $(this).val()
@@ -366,28 +373,32 @@ $(document).ready(function () {
   });
 
   
-$("#chatSend").on("click", function (e) {
-  e.preventDefault();
-  if (myPlayerIndex === undefined){
-    displayResult("Log in to play and chat");
-    return;
-  }  
+  $("#chatSend").on("click", function (e) {
+    if (myPlayerIndex === undefined){
+      displayResult("Log in to play and chat");
+      return;
+    }  
+    var chatEntry = $("#chatEntry").val().trim();
+    //if it's not empty, push to db
+      if(chatEntry != ""){
+        $("#chatEntry").focus();
+        $("#chatEntry").empty();
+        $("#chatEntry").select();
+        var chat = chatRef.push({
+          message: chatEntry, 
+          sender: players[myPlayerIndex-1].name
+          });
+      }    
+    e.preventDefault();
+  });
 
-  var chatEntry = $("#chatEntry").val().trim();
-  var chat = chatRef.push({
-    message: chatEntry, 
-    sender: players[myPlayerIndex-1].name}
-  );
-  $("#chatEntry").empty();
-});
-
-chatRef.on("child_added", function (snapshot){
+  chatRef.on("child_added", function (snapshot){
   //get the sender and message and append to screen
     chat = snapshot.val();
     var chatDiv = $("<div>").html(chat.sender + ": " + chat.message);
-    console.log(chatDiv);
+    console.log($("#chatHistory"));
     $("#chatHistory").append(chatDiv);
+    $("#chatHistory").scrollTop = 400;
   });
-
 
 });

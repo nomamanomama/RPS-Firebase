@@ -1,4 +1,4 @@
-body {
+    body {
     background-image: url("../../assets/images/rock-paper-scissors-bg1.jpg");
     font-size: 14px;
 }
@@ -25,125 +25,127 @@ body {
 }
 
 .card-body {
-    padding: 5px 5px;
-}
-
-.playerBox {
-    background-color: #777777;
-    height: 250px;
-    text-align: center;
-    color: white;
-    padding: 0px;
-}
-
-.resultBox {
-    background-color: #c4c4c4;
-    height: 250px;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 600;
-    align-content: center;
-    color: rgb(77, 77, 77);
-    padding: 20px 20px;
-}
-
-.container {
-    max-width: 960px;
-    background-color: #7be0ba;
+    margin: 0px;
     padding: 5px;
 }
 
-#player1-buttons {
-    width: 100%;
-}
-
-.rpsButton {
-    display: inline;
-    max-width: 75px;
-    padding: 0px;
-    border: solid 0px transparent;
-}
-
-.rpsButton:hover {
-    border-left-style: none;
-    border: solid 3px #3a5cf1;
-    border-radius: 5px;
-}
-
-.rpsImage {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-}
-
-.chatBox {
-    margin: 10px;
-    max-width: 400px;
-}
-
-#chatHistory {
-    padding-top: 0px;
-    height: 200px;
-    overflow-y: auto;
-    display: block;
- }
-
-#gameMessage {
+.playerBox {
+    height: 250px;
+    background-color: #777777;
     text-align: center;
-    padding: 10px;
-}
-
-#newPlayerName {
-    width: 200px;
-    margin: 10px;
-    padding-left: 10px;
-    font-size: 1.25rem;
-}
-
-#newPlayer {
-    background-color: #3a5cf1;
-    width: 100px;
-    margin: 10px;
-    align-content: center;
-}
-
-#chatEntry {
-    width: 300px;
-    padding-left: 10px;
-    height: 100%;
-    margin-right: 0px;
-}
-
-#chatSend {
-    width: 60px;
-    height: 100%;
-    margin-left: 0px;
-}
-
-.card-header {
-    font-weight: 700;
-    padding: 4px;
-}
-
-#chatTitle {
-    margin: 10px;
-}
-
-.tooltip:hover {
-    background-color: #3a5cf1;
     color: white;
-    font-size: 1rem;
-    padding: 2px;
+    padding: 0px;
 }
 
-.active {
-    border-left-style: none;
-    border: solid 3px #3a5cf1;
-    border-radius: 5px;
+#playerMessage {
+    font-size: 1.25rem;
+    margin-top:20px;
+    font-weight: 600;
 }
-
-#resultPic {
-    max-width: 180px;
-    max-height: 100px;
-}
+    .resultBox {
+        background-color: #c4c4c4;
+        height: 250px;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+        align-content: center;
+        color: rgb(77, 77, 77);
+        padding: 20px 20px;
+    }
+    .container {
+        max-width: 960px;
+        background-color: #7be0ba;
+        padding: 5px;
+    }
+    #player1-buttons {
+        width: 100%;
+    }
+    .rpsButton {
+        display: inline;
+        max-width: 75px;
+        padding: 0px;
+        border: solid 0px transparent;
+    }
+    .rpsButton:hover {
+        border-left-style: none;
+        border: solid 3px #3a5cf1;
+        border-radius: 5px;
+    }
+    .rpsButton .img-top {
+        display: none;
+        position: absolute;
+        max-width: 75px;
+        top: 0;
+        left: 0;
+        z-index: 99;
+    }
+    /* .rpsButton:hover .img-top {
+    display: inline;
+} */
+    .rpsImage {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+    .chatBox {
+        margin: 10px;
+        max-width: 400px;
+    }
+    #chatHistory {
+        padding-top: 0px;
+        height: 200px;
+        overflow-y: auto;
+        display: block;
+    }
+    #gameMessage {
+        text-align: center;
+        padding: 10px;
+    }
+    #newPlayerName {
+        width: 200px;
+        margin: 10px;
+        padding-left: 10px;
+        font-size: 1.25rem;
+    }
+    #newPlayer {
+        background-color: #3a5cf1;
+        width: 100px;
+        margin: 10px;
+        align-content: center;
+    }
+    #chatEntry {
+        width: 300px;
+        padding-left: 10px;
+        height: 40px;
+        margin-right: 0px;
+        align-self: baseline;
+    }
+    #chatSend {
+        width: 60px;
+        height: 40px;
+        margin-left: 0px;
+    }
+    .card-header {
+        font-weight: 700;
+        padding: 4px;
+    }
+    #chatTitle {
+        margin: 10px;
+    }
+    .tooltip:hover {
+        background-color: #3a5cf1;
+        color: white;
+        font-size: 1rem;
+        padding: 2px;
+    }
+    .active {
+        border-left-style: none;
+        border: solid 3px #3a5cf1;
+        border-radius: 5px;
+    }
+    #resultPic {
+        margin-top: 20px;
+        max-width: 180px;
+        max-height: 100px;
+    }
