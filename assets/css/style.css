@@ -1,4 +1,5 @@
-    body {
+/* Style file for Rock Paper Scissors Firebase game */
+body {
     background-image: url("../../assets/images/rock-paper-scissors-bg1.jpg");
     font-size: 14px;
 }
