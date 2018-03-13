@@ -23,13 +23,13 @@ var chatRef = db.ref("/chat");
 var connectedRef = db.ref(".info/connected");
 
 // When the client's connection state changes...
-connectedRef.on("value", function (snapshot) {
-  // If they are connected..
-  if (snapshot.val()) {
-    console.log ("connected status: " + snapshot.val());    
-  }
+// connectedRef.on("value", function (snapshot) {
+//   // If they are connected..
+//   if (snapshot.val()) {
+//     console.log ("connected status: " + snapshot.val());    
+//   }
   
-});
+// });
 
 playersRef.on("value", function (snapshot) {
   if(snapshot.val()){
@@ -55,15 +55,30 @@ playersRef.on("value", function (snapshot) {
       else if(player2connected){
         updateLocalPlayer(2, snapshot.child('2').val());
         updatePlayerDisplay(2);
-      }
+      } 
       gameInSession = false;
       endRound();
       setCurrentPlayerDisplay(0);
-      displayResult("Waiting...");    
+      displayResult("Waiting..."); 
     }
   }
 });
 
+//listen for changes to all database and monitor if we have 
+db.ref().on("value", function (snapshot) {
+    if(snapshot.val()){
+        //check to see if we have players connected
+        var player1connected = snapshot.child('players/1').exists();
+        var player2connected = snapshot.child('players/2').exists();
+        if (!(player1connected || player2connected)){
+            console.log("No players connected. Erase chat history");
+            //erase chat history
+            chatRef.remove();
+            $("#chatHistory").empty();
+            db.ref('/turn').remove();
+        }
+    }
+});
 
 // -------------------------------------------------------------- (CRITICAL - BLOCK) 
 
@@ -244,161 +259,171 @@ function displayResult(message, index=0) {
 }
 
 $(document).ready(function () {
-  $("#newPlayerName").focus();
-  $("#newPlayerName").select();
-  $("#player1-buttons").hide();
-  $("#player2-buttons").hide();
-  $("#resultPic").hide();
-  scrollTo(0, $("#chatHistory").scrollHeight);
-  //initiate bootstrap tooltips
-  $('[data-toggle="tooltip"]').tooltip();
+    $("#newPlayerName").focus();
+    $("#newPlayerName").select();
+    $("#player1-buttons").hide();
+    $("#player2-buttons").hide();
+    $("#resultPic").hide();
 
-  //function to display Player input field or playermessage
-  function displayNewPlayerBox(show, message) {
-    if (show) {
-      $("#newPlayerBox").show();
-      $("#playerMessage").hide();
+    //initiate bootstrap tooltips
+    $('[data-toggle="tooltip"]').tooltip();
+
+    //function to display Player input field or playermessage
+    function displayNewPlayerBox(show, message) {
+        if (show) {
+            $("#newPlayerBox").show();
+            $("#playerMessage").hide();
+        }
+        else {
+            $("#newPlayerBox").hide();
+            $("#playerMessage").show();
+            $("#playerMessage").text(message);
+        }
     }
-    else {
-      $("#newPlayerBox").hide();
-      $("#playerMessage").show();
-      $("#playerMessage").text(message);
-    }
-  }
 
-  //on $(#newPlayer) click, assign Player number and display welcome message
-  $("#newPlayer").on("click", function (e) {
-    e.preventDefault();
-    var playerName = $("#newPlayerName").val().trim();
+    //on $(#newPlayer) click, assign Player number and display welcome message
+    $("#newPlayer").on("click", function (e) {
+        e.preventDefault();
+        var playerName = $("#newPlayerName").val().trim();
 
-    var player1Ref = db.ref('/players/1');
-    var player2Ref = db.ref('/players/2');
+        var player1Ref = db.ref('/players/1');
+        var player2Ref = db.ref('/players/2');
 
-    var player1exists = false;
-    console.log(playerName + " signed in");
-    //if we don't have a game in session and player entered a name
-    if (!gameInSession && playerName != "") {
-      //get a snapshot of the playersRef
-      playersRef.once("value")
-        .then(function (snapshot) {
-          console.log(snapshot.val());
-          console.log(snapshot.child('1').exists());
-          //if "1" exists, make this player 2
-          if (snapshot.child('1').exists()) {
-            player2Ref.set({
-              name: playerName,
-              wins: 0,
-              losses: 0,
-              choice: ""
-            }, function (error) {
-              console.log("Error: " + error);
+        var player1exists = false;
+        console.log(playerName + " signed in");
+        //if we don't have a game in session and player entered a name
+        if (!gameInSession && playerName != "") {
+            //get a snapshot of the playersRef
+            playersRef.once("value")
+                .then(function (snapshot) {
+                    console.log(snapshot.val());
+                    console.log(snapshot.child('1').exists());
+                    //if "1" exists, make this player 2
+                    if (snapshot.child('1').exists()) {
+                        player2Ref.set({
+                            name: playerName,
+                            wins: 0,
+                            losses: 0,
+                            choice: ""
+                        }, function (error) {
+                            console.log("Error: " + error);
+                        });
+                        myPlayerIndex = 2;
+                    }
+                    else {//else, make this player 1
+                        player1Ref.set({
+                            name: playerName,
+                            wins: 0,
+                            losses: 0,
+                            choice: ""
+                        }, function (error) {
+                            console.log("Error: " + error);
+                        });
+                        myPlayerIndex = 1;
+                    }
+                    //remove from db on disconnect
+                    var playerChild = playersRef.child(myPlayerIndex.toString());
+                    playerChild.onDisconnect().remove();
+
+                    //Welcome user
+                    var displayMessage = "Welcome to the game " + playerName + "! You're Player " + myPlayerIndex;
+
+                    //enable the chat button
+                    $("#chatSend").attr("disabled", false);
+                    $("#chatSend").attr("aria-disabled", false);
+
+                    //get another snapshot of db to get player count
+                    playersRef.once("value")
+                        .then(function (snapshot) {
+                            console.log("player added. num children now: " + snapshot.numChildren());
+                            //if we have 2 players, flip the gamesession flag to true
+                            if (snapshot.numChildren() === 2) {
+                                gameInSession = true;
+                                //start a new round using the turn flag in db
+                                startNewRound();
+                            }
+                        });
+
+                    displayNewPlayerBox(false, displayMessage);
+                });
+
+        }
+
+        if (myPlayerIndex !== undefined) {
+            var displayMessage = "Good Luck!";
+            if (numPlayers === 1)
+                displayMessage = "Waiting on another player.";
+
+            displayNewPlayerBox(false, displayMessage);
+        }
+
+    });
+
+    //on $(#newPlayer) click, assign Player number and display welcome message
+    $(document).on("keyup", function (e) {
+        
+        if ((myPlayerIndex === 1 || myPlayerIndex === 2) && e.key === "Enter")
+        {   
+            console.log("enter clicked");
+            $("#chatSend").trigger("click");
+        }
+    });
+
+    db.ref('turn').on("value", function (snapshot) {
+        //get player choice info
+        if (snapshot.child('turn').exists() && gameInSession) {
+            console.log("turn: " + snapshot.val().turn);
+            turn = snapshot.val().turn;
+            if (turn === 0) { //display results
+                calculateResult();
+                setTimeout(startNewRound, 2000);
+            }
+            else {
+                //changed turns
+                setCurrentPlayerDisplay(turn);
+            }
+        }
+    });
+
+    //on $(#rpsButton) click, update db with choice and handle turn state
+    $(".rpsButton").on("click", function () {
+        db.ref('players/' + myPlayerIndex).update({
+            choice: $(this).val()
+        })
+        //if I'm player 2, evaluate the choices for both players
+        if (myPlayerIndex === 2)
+            endRound();
+        else if (myPlayerIndex === 1)
+            nextTurn();
+    });
+
+
+    $("#chatSend").on("click", function (e) {
+        if (myPlayerIndex === undefined) {
+            displayResult("Log in to play and chat");
+            return;
+        }
+        var chatEntry = $("#chatEntry").val().trim();
+        //if it's not empty, push to db
+        if (chatEntry != "") {
+            $("#chatEntry").focus();
+            $("#chatEntry").val("");
+            $("#chatEntry").select();
+            var chat = chatRef.push({
+                message: chatEntry,
+                sender: players[myPlayerIndex - 1].name
             });
-            myPlayerIndex = 2;
-          }
-          else {//else, make this player 1
-            player1Ref.set({
-              name: playerName,
-              wins: 0,
-              losses: 0,
-              choice: ""
-            }, function (error) {
-              console.log("Error: " + error);
-            });
-            myPlayerIndex = 1;
-          }
-          //remove from db on disconnect
-          var playerChild = playersRef.child(myPlayerIndex.toString());
-         playerChild.onDisconnect().remove();
-          
-          //Welcome user
-          var displayMessage = "Welcome to the game " + playerName + "! You're Player " + myPlayerIndex;
-          
-          //enable the chat button
-          $("#chatSend").attr("disabled", false);
-          $("#chatSend").attr("aria-disabled", false);  
+        }
+        e.preventDefault();
+    });
 
-          //get another snapshot of db to get player count
-          playersRef.once("value")
-            .then(function (snapshot) {
-              console.log("player added. num children now: " + snapshot.numChildren());
-              //if we have 2 players, flip the gamesession flag to true
-              if (snapshot.numChildren() === 2){
-                gameInSession = true;
-                //start a new round using the turn flag in db
-                startNewRound();
-              }
-            });
-
-          displayNewPlayerBox(false, displayMessage);
-        });
-
-    }
-
-    if (myPlayerIndex !== undefined) {
-      var displayMessage = "Good Luck!";
-      if (numPlayers === 1)
-        displayMessage = "Waiting on another player.";
-
-      displayNewPlayerBox(false, displayMessage);
-    }
-
-  });
-
-  db.ref('turn').on("value", function (snapshot) {
-    //get player choice info
-    if(snapshot.child('turn').exists() && gameInSession){
-      console.log("turn: " + snapshot.val().turn);
-      turn = snapshot.val().turn;
-      if (turn === 0) { //display results
-        calculateResult();
-        setTimeout(startNewRound, 2000);
-      } 
-      else {
-        //changed turns
-        setCurrentPlayerDisplay(turn);
-      }
-    }
-  });
-
-   //on $(#rpsButton) click, update db with choice and handle turn state
-  $(".rpsButton").on("click", function () {
-    db.ref('players/' + myPlayerIndex).update({
-      choice: $(this).val()
-    })
-    //if I'm player 2, evaluate the choices for both players
-    if (myPlayerIndex === 2)
-      endRound();
-    else if (myPlayerIndex === 1)
-      nextTurn();
-  });
-
-  
-  $("#chatSend").on("click", function (e) {
-    if (myPlayerIndex === undefined){
-      displayResult("Log in to play and chat");
-      return;
-    }  
-    var chatEntry = $("#chatEntry").val().trim();
-    //if it's not empty, push to db
-      if(chatEntry != ""){
-        $("#chatEntry").focus();
-        $("#chatEntry").empty();
-        $("#chatEntry").select();
-        var chat = chatRef.push({
-          message: chatEntry, 
-          sender: players[myPlayerIndex-1].name
-          });
-      }    
-    e.preventDefault();
-  });
-
-  chatRef.on("child_added", function (snapshot){
-  //get the sender and message and append to screen
-    chat = snapshot.val();
-    var chatDiv = $("<div>").html(chat.sender + ": " + chat.message);
-    console.log($("#chatHistory"));
-    $("#chatHistory").append(chatDiv);
-    $("#chatHistory").scrollTop = 400;
-  });
+    chatRef.on("child_added", function (snapshot) {
+        //get the sender and message and append to screen
+        chat = snapshot.val();
+        var chatDiv = $("<div>").html(chat.sender + ": " + chat.message);
+        $("#chatHistory").append(chatDiv);
+        $("#chatHistory").scrollTop($("#chatHistory").height());
+    });
 
 });
+

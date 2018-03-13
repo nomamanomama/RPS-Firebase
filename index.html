@@ -19,7 +19,7 @@
     <div class="container">
         <div class="row justify-content-center" id="newPlayerBox">
             <form>
-                <div class="input-group mb-3 chatBox">
+                <div class="input-group mb-1 newPlayerForm">
                     <input id="newPlayerName" type="text" class="form-control" placeholder="Player Name" aria-label="New Player Name" aria-describedby="basic-addon2">
                     <div class="input-group-append">
                         <button class="btn btn-secondary newPlayerButton" id="newPlayer" type="submit">Play</button>
@@ -34,8 +34,8 @@
         </div>            
         <div class="row justify-content-center" id="playerMessage"></div>
         
-        <div class="row justify-content-center" id="gameboard">
-            <div class="col-4 card playerBox" id="player1">
+        <div class="row justify-content-center card-deck" id="gameboard">
+            <div class="col-4 card mb-2 playerBox" id="player1">
                 <div class="card-header">
                     Player 1
                 </div>
@@ -43,17 +43,17 @@
                     <h5 class="card-title" id="player1-name"></h5>
                     <div id="player1-buttons">
                         <p class="card-text">Choose your weapon</p>
-                        <button type="button" class="btn rpsButton" value = "rock" id="rock1" data-toggle="tooltip" data-placement="top" title="Rock">
-                            <img src="./assets/images/rock.jpg" class="rpsImage" alt="rock">
-                            <img src="./assets/images/rock-h.jpg" class="rpsImage img-top" alt="rock">
+                        <button type="button" class="btn rpsButton" value = "rock" id="rock1" title="Rock">
+                            <img src="./assets/images/rock.jpg" class="rpsImage rock" alt="rock">
+                            <img src="./assets/images/rock-h.jpg" class="rpsImage rock img-top" alt="rock">
                         </button>
-                        <button type="button" class="btn rpsButton" value = "paper" id="paper1" data-toggle="tooltip" data-placement="top" title="Paper">
-                            <img src="./assets/images/paper.jpg" class="rpsImage" alt="paper">
-                            <img src="./assets/images/paper-h.jpg" class="rpsImage img-top" alt="paper">
+                        <button type="button" class="btn rpsButton" value = "paper" id="paper1" title="Paper">
+                            <img src="./assets/images/paper.jpg" class="rpsImage paper" alt="paper">
+                            <img src="./assets/images/paper-h.jpg" class="rpsImage paper img-top" alt="paper">
                         </button>
-                        <button type="button" class="btn rpsButton" value = "scissors" id="scissors1" data-toggle="tooltip" data-placement="top" title="Scissors">
-                            <img src="./assets/images/scissors.jpg" class="rpsImage" alt="scissors">
-                            <img src="./assets/images/scissors-h.jpg" class="rpsImage img-top" alt="scissors">
+                        <button type="button" class="btn rpsButton" value = "scissors" id="scissors1" title="Scissors">
+                            <img src="./assets/images/scissors.jpg" class="rpsImage scissors" alt="scissors">
+                            <img src="./assets/images/scissors-h.jpg" class="rpsImage scissors img-top" alt="scissors">
                         </button>
                     </div>
                     <div id="player1-choice"></div>
@@ -66,7 +66,7 @@
                 <div id="result"></div>
                 <div><img id="resultPic" src="./assets/images/rockpaperscissors.jpg" alt="win-pic"></div>
             </div>
-            <div class="col-4 card playerBox" id="player2">
+            <div class="col-4 card mb-2 playerBox" id="player2">
                 <div class="card-header">
                     Player 2
                 </div>
@@ -74,17 +74,17 @@
                     <h5 class="card-title" id="player2-name"></h5>
                     <div id="player2-buttons">
                         <p class="card-text">Choose your weapon</p>
-                        <button type="button" class="btn rpsButton" id="rock2" value = "rock" data-toggle="tooltip" data-placement="top" title="Rock">
-                            <img src="./assets/images/rock.jpg" class="rpsImage" alt="rock">
-                            <img src="./assets/images/rock-h.jpg" class="rpsImage img-top" alt="rock">
+                        <button type="button" class="btn rpsButton" id="rock2" value = "rock" title="Rock">
+                            <img src="./assets/images/rock.jpg" class="rpsImage rock" alt="rock">
+                            <img src="./assets/images/rock-h.jpg" class="rpsImage rock img-top" alt="rock">
                         </button>
-                        <button type="button" class="btn rpsButton" id="paper2" value = "paper" data-toggle="tooltip" data-placement="top" title="Paper">
-                            <img src="./assets/images/paper.jpg" class="rpsImage" alt="paper">
-                            <img src="./assets/images/paper-h.jpg" class="rpsImage img-top" alt="paper">
+                        <button type="button" class="btn rpsButton" id="paper2" value = "paper" title="Paper">
+                            <img src="./assets/images/paper.jpg" class="rpsImage paper" alt="paper">
+                            <img src="./assets/images/paper-h.jpg" class="rpsImage paper img-top" alt="paper">
                         </button>
-                        <button type="button" class="btn rpsButton" id="scissors2" value = "scissors" data-toggle="tooltip" data-placement="top" title="Scissors">
-                            <img src="./assets/images/scissors.jpg" class="rpsImage" alt="scissors">
-                            <img src="./assets/images/scissors-h.jpg" class="rpsImage img-top" alt="scissors">
+                        <button type="button" class="btn rpsButton" id="scissors2" value = "scissors" title="Scissors">
+                            <img src="./assets/images/scissors.jpg" class="rpsImage scissors" alt="scissors">
+                            <img src="./assets/images/scissors-h.jpg" class="rpsImage scissors img-top" alt="scissors">
                         </button>
                     </div>
                     <div id="player2-choice"></div>
@@ -96,14 +96,16 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 card chatBox">
+            <div class="col-6 card chatBox">
                 <div class="card-title" id="chatTitle">
                     <h5>Chat History</h5>
                 </div>
                 <div class="card-body" id="chatHistory">
                 </div>
             </div>
-            <div class="input-group mb-3 chatBox">
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-6 input-group mb-3 chatBox">
                 <input id="chatEntry" type="text"  placeholder="Chat Message" aria-label="Chat Message" aria-describedby="basic-addon2">
                 <!-- class="form-control" -->
                 <div class="input-group-append">
